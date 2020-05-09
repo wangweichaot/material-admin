@@ -1,0 +1,39 @@
+server:
+  port: 9001
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    #url: jdbc:mysql://116.62.151.141:3306/material?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false
+    url: jdbc:mysql://116.62.151.141:3306/material?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=GMT%2b8
+    username: hytuser
+    password: Sjl@2023uabe
+
+mybatis:
+  mapper-locations: "classpath*:mapper/**/*.xml"
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+logging:
+  config:
+    classpath: logback/logback.xml
+#  level:
+#    com.sjlexpress.wl.**.dao: debug
+#解决访问swagger首页后报java.lang.NumberFormatException:For input string:""异常问题
+  level:
+    io.swagger.models.parameters.AbstractSerializableParameter: error
+
+myConfig:
+  pageSize: 20
+
+swagger:
+  enable: true
+
+#超级管理员初始化
+admininit:
+  config:
+    userAccount: admin
+    pswd: abc123456
+    
+    
+    

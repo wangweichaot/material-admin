@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sjlexpress.wl.dao.DeptMapper">
+  <resultMap id="BaseResultMap" type="com.sjlexpress.wl.pojo.Dept">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="province_id" jdbcType="VARCHAR" property="provinceId" />
+    <result column="city_id" jdbcType="VARCHAR" property="cityId" />
+    <result column="area_id" jdbcType="VARCHAR" property="areaId" />
+    <result column="province_name" jdbcType="VARCHAR" property="provinceName" />
+    <result column="city_name" jdbcType="VARCHAR" property="cityName" />
+    <result column="area_name" jdbcType="VARCHAR" property="areaName" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="is_delete" jdbcType="INTEGER" property="isDelete" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  
+  <resultMap id="PageListMap" type="com.sjlexpress.wl.dto.DeptDto">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="province_id" jdbcType="VARCHAR" property="provinceId" />
+    <result column="city_id" jdbcType="VARCHAR" property="cityId" />
+    <result column="area_id" jdbcType="VARCHAR" property="areaId" />
+    <result column="province_name" jdbcType="VARCHAR" property="provinceName" />
+    <result column="city_name" jdbcType="VARCHAR" property="cityName" />
+    <result column="area_name" jdbcType="VARCHAR" property="areaName" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="is_delete" jdbcType="INTEGER" property="isDelete" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  
+  <select id="getDeptList" resultMap="PageListMap">
+     select t.id,
+			t.name,
+			t.province_id,
+			t.city_id,
+			t.area_id,
+			t.province_name,
+			t.city_name,
+			t.area_name,
+			t.address,
+			t.phone,
+			t.is_delete,
+			t.create_user,
+			t.create_time,
+			t.update_user,
+			t.update_time
+	  from t_dept t
+      where 1=1
+        <if test="provinceId !=null and provinceId !=''">
+            AND t.province_id = #{provinceId}
+        </if>
+        <if test="cityId !=null and cityId !=''">
+            AND t.city_id = #{cityId}
+        </if>
+        <if test="areaId !=null and areaId !=''">
+            AND t.area_id = #{areaId}
+        </if>
+        <if test="name !=null and name !=''">
+            AND t.name LIKE CONCAT('%',#{name},'%')
+        </if>
+   </select>
+   
+   <resultMap id="SelectMap" type="com.sjlexpress.wl.dto.DeptDto">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="is_delete"  property="isDelete" />
+  </resultMap>
+  
+  <select id="getDeptListNoPage" resultMap="SelectMap">
+     select t.id,
+			t.name,
+			t.is_delete
+	  from t_dept t
+  </select>
+  
+  <select id="checkDeptInfo" parameterType="java.lang.String" resultType="java.lang.Integer" >
+	select count(*) 
+		   from t_dept t
+		  where t.is_delete = 0
+		    and t.name = #{name}
+	    <if test="operFlag == '2'.toString()">
+            and t.id != #{id}
+        </if>
+   </select>
+  
+</mapper>

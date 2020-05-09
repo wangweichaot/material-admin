@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sjlexpress.wl.dao.SystemRoleMapper">
+  <resultMap id="BaseResultMap" type="com.sjlexpress.wl.pojo.SystemRole">
+    <id column="id" property="id" />
+    <result column="role_name" property="roleName" />
+    <result column="is_delete" jdbcType="INTEGER" property="isDelete" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="ids" property="ids" />
+    <result column="is_super" property="isSuper" />
+  </resultMap>
+  
+  <resultMap id="PageListMap" type="com.sjlexpress.wl.dto.SystemRoleDto">
+    <id column="id" property="id" />
+    <!-- <result column="role_id" property="roleId" /> -->
+    <result column="role_name" property="roleName" />
+    <result column="is_delete" jdbcType="INTEGER" property="isDelete" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="ids" property="ids" />
+    <result column="is_super" property="isSuper" />
+  </resultMap>
+  
+  <select id="getSystemRoleList" resultMap="PageListMap">
+     select t.id,
+			t.role_name,
+			t.ids,
+			t.is_delete,
+			(select u.user_name from system_user u where u.id = t.create_user) as create_user,
+			t.create_time,
+			(select u.user_name from system_user u where u.id = t.update_user) as update_user,
+			t.update_time,
+			is_super
+	  from system_role t
+      where is_super != 1
+        <if test="roleName !=null and roleName !=''">
+            AND t.role_name LIKE CONCAT('%',#{roleName},'%')
+        </if>
+   </select>
+   
+   <select id="checkSystemRoleInfo" parameterType="java.lang.String" resultType="java.lang.Integer" >
+	select count(*) 
+		   from system_role t
+		  where t.is_delete = 0
+		    and t.role_name = #{roleName}
+	    <if test="operFlag == '2'.toString()">
+            and t.id != #{id}
+        </if>
+   </select>   
+   
+   <insert id="insertSystemRole" useGeneratedKeys="true" keyProperty="id" parameterType="com.sjlexpress.wl.pojo.SystemRole" >
+    insert into system_role
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="roleName != null" >
+        role_name,
+      </if>
+      <if test="isDelete != null" >
+        is_delete,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="ids != null" >
+        ids,
+      </if>
+      <if test="isSuper != null" >
+        is_super,
+      </if>
+      
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="roleName != null" >
+        #{roleName},
+      </if>
+      <if test="isDelete != null" >
+        #{isDelete},
+      </if>
+      <if test="createUser != null" >
+        #{createUser},
+      </if>
+      <if test="createTime != null" >
+        #{createTime},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime},
+      </if>
+      <if test="ids != null" >
+        #{ids},
+      </if>
+      <if test="isSuper != null" >
+        #{isSuper},
+      </if>
+    </trim>
+  </insert>
+   
+</mapper>

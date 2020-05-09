@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sjlexpress.wl.dao.SystemRoleMenuMapper">
+  <resultMap id="BaseResultMap" type="com.sjlexpress.wl.pojo.SystemRoleMenu">
+    
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="role_id" jdbcType="VARCHAR" property="roleId" />
+    <result column="menu_id" jdbcType="VARCHAR" property="menuId" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  
+  <delete id="delSystemRoleMenuByRoleId" parameterType="String">
+  	 delete from system_role_menu t where t.role_id = #{roleId}
+  </delete>
+  
+</mapper>

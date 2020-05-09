@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<!--根节点 -->
+<generatorConfiguration>
+	<!-- 指定外部的属性元素 -->
+	<properties resource="generator/generator.properties" />
+	<!--指定特定数据库的jdbc驱动jar包的位置 这个元素可以0或多个，不受限制。classpath下会找 -->
+	<!--<classPathEntry location="${jdbc.driverLocation}"/> -->
+	<!-- 必须 指定生成一组对象的环境 -->
+	<context id="Mysql" targetRuntime="MyBatis3Simple"
+		defaultModelType="flat">
+		<!--分隔符 -->
+		<property name="autoDelimitKeywords" value="true" />
+		<property name="beginningDelimiter" value="`" />
+		<property name="endingDelimiter" value="`" />
+		
+		<!-- 通用mapper插件 -->
+		<plugin type="${mbg.tk.plugin}">
+			<!-- 此处的 MyMapper注意一定不能被扫描到 -->
+			<property name="mappers" value="${mbg.tk.mappers}" />
+		</plugin>
+
+		<!-- 注释 规则 -->
+		<commentGenerator>
+			<!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+			<property name="suppressAllComments" value="false" />
+			<property name="suppressDate" value="true" />
+		</commentGenerator>
+
+		<!--jdbc的数据库连接 -->
+		<jdbcConnection driverClass="${mbg.jdbc.driverClass}"
+			connectionURL="${mbg.jdbc.url}" userId="${mbg.jdbc.username}"
+			password="${mbg.jdbc.password}">
+		</jdbcConnection>
+
+		<!-- 非必需，类型处理器，这个元素的配置用来指定JDBC类型和Java类型如何转换。 -->
+		<javaTypeResolver>
+			<!--该属性可以控制是否强制DECIMAL和NUMERIC类型的字段转换为Java类型的java.math.BigDecimal,默认值为false，一般不需要配置。 -->
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+
+		<!-- javaModelGenerator 该元素用来控制生成的实体类，根据<context>中配置的defaultModelType，一个表可能会对应生成多个不同的实体类。一个表对应多个类实际上并不方便，所以前面也推荐使用flat，这种情况下一个表对应一个实体类。 -->
+		<javaModelGenerator
+			targetPackage="${mbg.javaModelGenerator.targetPackage}"
+			targetProject="${mbg.javaModelGenerator.targetProject}">
+			<!-- 增加基础bean的继承操作，将通用属性集成到BaseEntity内部 -->
+			<property name="rootClass"
+				value="${mbg.javaModelGenerator.rootClass}" />
+		</javaModelGenerator>
+
+		<!--sqlMapGenerator 该元素可选，最多配置一个。但是有如下两种必选的特殊情况： targetPackage:生成实体类存放的包名，一般就是放在该包下。实际还会受到其他配置的影响(<table>中会提到)。 
+			targetProject:指定目标项目路径，使用的是文件系统的绝对路径。 -->
+		<sqlMapGenerator
+			targetPackage="${mbg.sqlMapGenerator.targetPackage}"
+			targetProject="${mbg.sqlMapGenerator.targetProject}">
+		</sqlMapGenerator>
+
+		<!--javaClientGenerator该元素可选，最多配置一个。 targetPackage:生成实体类存放的包名，一般就是放在该包下。实际还会受到其他配置的影响(<table>中会提到)。 
+			targetProject:指定目标项目路径，使用的是文件系统的绝对路径。 -->
+		<javaClientGenerator type="XMLMAPPER"
+			targetPackage="${mbg.javaClientGenerator.targetPackage}"
+			targetProject="${mbg.javaClientGenerator.targetProject}">
+		</javaClientGenerator>
+
+		<!-- 要生成的那些表，可以配置多个 -->
+		<table tableName="t_dept" enableSelectByPrimaryKey="true"/>
+		
+	</context>
+	<!-- mvn mybatis-generator:generate -->
+</generatorConfiguration>
+
+

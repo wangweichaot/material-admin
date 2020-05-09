@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sjlexpress.wl.dao.SystemUserMapper">
+  <resultMap id="BaseResultMap" type="com.sjlexpress.wl.pojo.SystemUser">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="user_account" jdbcType="VARCHAR" property="userAccount" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="sex" jdbcType="VARCHAR" property="sex" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="is_delete" property="isDelete" />
+  </resultMap>
+  
+  <resultMap id="PageListMap" type="com.sjlexpress.wl.dto.SystemUserDto">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="user_account" jdbcType="VARCHAR" property="userAccount" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="sex" jdbcType="VARCHAR" property="sex" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="is_delete" property="isDelete" />
+    <result column="role_id" property="roleId" />
+    <result column="role_name" property="roleName" />
+  </resultMap>
+  
+  <select id="getSysUserList" resultMap="PageListMap">
+     select 
+     	t.id,
+			t.user_account,
+			t.password,
+			t.user_name,
+			t.sex,
+			t.is_delete,
+			(select u.user_name from system_user u where u.id = t.create_user) as create_user,
+			t.create_time,
+			(select u.user_name from system_user u where u.id = t.update_user) as update_user,
+			t.update_time,
+			t.remark,
+			sr.role_id,
+			(select r.role_name from system_role r where r.id = sr.role_id) as role_name
+	  	from system_user t
+		left join system_user_role sr on t.id = sr.user_id
+      where 1=1
+        <if test="userAccount !=null and userAccount !=''">
+            AND t.user_account LIKE CONCAT('%',#{userAccount},'%')
+        </if>
+        <if test="userName !=null and userName !=''">
+            AND t.user_name LIKE CONCAT('%',#{userName},'%')
+        </if>
+      order by t.create_time desc
+   </select>
+   
+   <select id="getSysUserDetail" resultMap="PageListMap">
+       select 
+     		t.id,
+			t.user_account,
+			t.password,
+			t.user_name,
+			t.sex,
+			t.is_delete,
+			(select u.user_name from system_user u where u.id = t.create_user) as create_user,
+			t.create_time,
+			(select u.user_name from system_user u where u.id = t.update_user) as update_user,
+			t.update_time,
+			t.remark,
+			sr.role_id,
+			(select r.role_name from system_role r where r.id = sr.role_id) as role_name
+	  	from system_user t
+		left join system_user_role sr on t.id = sr.user_id
+      where t.id = #{id}
+      order by t.create_time desc
+   </select>
+   
+   <select id="selectByUserAccount" parameterType="java.lang.String" resultType="java.lang.Integer" >
+       select count(1) from system_user t where t.user_account = #{userAccount}
+       <if test="operFlag == '2'.toString()">
+           and t.id != #{id}
+       </if>
+  </select>
+  
+</mapper>
+
+
